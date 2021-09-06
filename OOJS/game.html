@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="style.css">
+        <title>Galaga</title>
+    </head>
+    
+           
+
+      
+
+ <body>
+     <div id="rocket"></div>
+     <div id = "score">
+         Killed: <span id = "killed">0</span> | Missed: <span id="missed">0</span>
+     </div>
+    
+     
+    <script>
+        window.onload = () => {
+            var killed = 0, missed = 0;
+            var rocket = document.getElementById("rocket")
+            var rocket_coordinates = [0,0]
+            function checkKey(e){
+                if (e.keyCode == '37') {
+                    var c = rocket.getBoundingClientRect()
+                    if (c.left > 10){
+                        rocket_coordinates[0] -= 9
+                
+                    }
+
+                }
+                else if (e.keyCode == '39'){
+                    var c = rocket.getBoundingClientRect()
+                    if (c.right < window.innerWidth - 10){
+                        rocket_coordinates[0] += 9
+                    
+                    }
+                }
+
+                rocket.style.transform = `translate(${rocket_coordinates[0]}px,${rocket_coordinates[1]})`
+    
+            }
+
+
+            shoot = function(event){
+                var bullet = document.createElement("div")
+                bullet.classList.add("bullet")
+                document.body.appendChild(bullet)
+            
+
+            
+                var c = rocket.getBoundingClientRect()
+                var sx = (c.left + c.right)/2
+                var sy = (c.top + c.bottom)/2
+            
+                  
+                var animation = bullet.animate([{transform: `translate(${sx-277}px, ${window.innerHeight-300}px)`}
+                ,{transform: `translate(${sx-277}px, ${-200}px)`}],{duration:700})
+
+                animation.onfinish = () =>{
+                    document.body.removeChild(bullet)
+                }
+            
+                document.body.appendChild(bullet)
+   
+            }
+            launchEnemy = function(){ 
+            setTimeout(() =>{
+                var enemy  = document.createElement("img")
+                enemy.src = "images/enemy.png"
+                enemy.classList.add("enemy")
+                var x = Math.round(Math.random()*window.innerWidth)
+                var tox = Math.round(Math.random()*window.innerWidth)
+                enemy.style.left = `${x}px`
+                enemy.style.top = `${window.innerWidth}px`
+                var animation = enemy.animate([
+                {transform: `translate(${tox-x}px,${-window.innerWidth}px)`},
+                {transform: `translate(0px,0px)`},
+                ],{duration:7000})
+
+                animation.onfinish = () =>{
+                    document.body.removeChild(enemy)
+                    missed +=1
+                    document.getElementById("missed").innerText = `${missed}`
+                }
+
+            
+                document.body.appendChild(enemy)
+                launchEnemy()
+            },Math.round(Math.random() * 2000) +500);
+        }
+
+
+        collision = function(r1,r2){
+            return Math.max(r1.top,r2.top) < Math.min(r1.bottom,r2.bottom) &&
+            Math.min(r1.right,r2.right) > Math.max(r1.left,r2.left)
+        }
+
+        hit = function(enemy){
+            killed++;
+            document.getElementById("killed").innerText = `${killed}`
+
+            var b = enemy.getBoundingClientRect()
+            var blast = document.createElement("img")
+            blast.src = "images/blast.gif"
+            blast.classList.add("blast")
+            blast.style.top = `${Math.round(b.top+ b.height / 2) - 50}px`
+            blast.style.left = `${Math.round(b.left+ b.width / 2) - 50}px`
+            blast.onload =() =>{
+                document.body.removeChild(enemy)
+                setTimeout (() => {
+                    document.body.removeChild(blast)
+                },200);
+                document.body.appendChild(blast)
+            }
+    
+        }
+
+            document.onkeydown = checkKey;
+            document.onclick = shoot
+            launchEnemy();
+            
+            setInterval(() => {
+                document.querySelectorAll(".enemy").forEach(enemy => {
+                    var b = enemy.getBoundingClientRect()
+                    document.querySelectorAll(".bullet").forEach(bullet =>{
+                        var c = bullet.getBoundingClientRect()
+                        if (collision(c,b)){
+                            hit(enemy)
+                            document.body.removeChild(bullet)
+                        }
+                    })
+                })
+            },100);
+
+
+        }
+    </script> 
+ </body>   
+</html>

@@ -1,0 +1,59 @@
+body {
+    overflow: hidden;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url(images/sky3.jpg);
+}
+#rocket {
+    position: absolute;
+    bottom: 2px;
+    left: 200px;
+    width: 200px;
+    height: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url(images/player.png);
+    transition: transform 0.1s;
+}
+.bullet{
+    position: absolute;
+    top: 200px;
+    left: 200px;
+    width: 30px;
+    height: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url(images/bullet.png);
+    transition: all 2s linear;
+}
+.enemy {
+    width: 100px;
+    height: 50px;
+    position: absolute;
+    top: -200px;
+    left: -100px;
+}
+#score{
+    border-radius: 20px;
+    color: seashell;
+    font-size: 1cm;
+    text-align: center;
+}
+#killed {
+    color: green;
+}
+
+#missed {
+    color: red;
+}
+
+.blast{
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: -100px;
+    left: -100px;
+}
+
+
+
